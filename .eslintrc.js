@@ -22,6 +22,7 @@ module.exports = {
  },
  plugins: ['@typescript-eslint', 'prettier'],
  rules: {
+  'no-param-reassign': 0,
   'linebreak-style': 0,
   'import/prefer-default-export': 0,
   'import/extensions': 0,
