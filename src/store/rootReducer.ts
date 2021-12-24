@@ -1,8 +1,8 @@
 import { combineReducers } from '@reduxjs/toolkit'
-import counterSlice from './counter/counterSlice'
+import { commentsSlice } from './modules/comments/CommentsSlice'
 
 const rootReducer = combineReducers({
- counter: counterSlice,
+ comments: commentsSlice.reducer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>
