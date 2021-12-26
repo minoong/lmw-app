@@ -6,23 +6,12 @@ import createSagaMiddleware from 'redux-saga'
 import { all, fork } from 'redux-saga/effects'
 
 import rootReducer, { RootState } from './rootReducer'
-import { watchComments } from '../saga/comments'
-import { commentsSlice } from './modules/comments/CommentsSlice'
-
-const sagaMiddleware = createSagaMiddleware()
-function* rootSaga() {
- yield all([fork(watchComments)])
-}
 
 const store = configureStore({
  reducer: rootReducer,
- middleware: (getDefaultMiddleware) => [...getDefaultMiddleware().concat(logger), sagaMiddleware],
+ middleware: (getDefaultMiddleware) => [...getDefaultMiddleware().concat(logger)],
  devTools: true,
 })
-
-sagaMiddleware.run(rootSaga)
-
-export type ReducerList = typeof commentsSlice.actions
 
 export type AppDispatch = typeof store.dispatch
 export const useAppDispatch = () => useDispatch<AppDispatch>()
