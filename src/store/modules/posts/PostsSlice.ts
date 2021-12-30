@@ -44,7 +44,7 @@ export const getPostsList = createAsyncThunk<Post[], Partial<Post & Pagination>,
    return []
   }
 
-  const response = await axios.get<Post[]>(`https://jsonplaceholder.typicode.com/po123sts?_start=${start}&_limit=${limit}`)
+  const response = await axios.get<Post[]>(`https://jsonplaceholder.typicode.com/posts?_start=${start}&_limit=${limit}`)
   return response.data
  },
 )
@@ -52,7 +52,15 @@ export const getPostsList = createAsyncThunk<Post[], Partial<Post & Pagination>,
 export const postsSlice = createSlice({
  name: 'posts',
  initialState,
- reducers: {},
+ reducers: {
+  postsInitialState: (state) => {
+   state.data = []
+   state.pagination = {
+    start: 0,
+    limit: 5,
+   }
+  },
+ },
  extraReducers: (builder) => {
   builder.addCase(getPostsList.pending, (state, action) => {
    if (state.loading === 'idle') {
@@ -65,6 +73,7 @@ export const postsSlice = createSlice({
    if (state.loading === 'pending' && state.currentRequestId === requestId) {
     state.loading = 'idle'
     state.data = [...state.data, ...action.payload]
+    state.pagination.start += state.pagination.limit
     state.currentRequestId = undefined
    }
   })
@@ -78,3 +87,5 @@ export const postsSlice = createSlice({
   })
  },
 })
+
+export const { postsInitialState } = postsSlice.actions
