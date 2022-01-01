@@ -36,7 +36,7 @@ const PostsContainer: React.FC = function () {
   console.log(1)
 
   return () => {
-   dispatch(postsInitialState())
+   //    dispatch(postsInitialState())
    console.log('123j1lk23j12lk3j12lk')
   }
  }, [])
