@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from './store/store'
 const PostsContainer = React.lazy(() => import('./containers/posts/PostsContainer'))
 const Tutorial = React.lazy(() => import('./components/d3/Tutorial'))
 const CandleStick = React.lazy(() => import('./components/d3/CandleStick'))
+const ChartContainer = React.lazy(() => import('./containers/upbit/ChartContainer'))
 
 const App: React.FC = function () {
  return (
@@ -34,10 +35,10 @@ const App: React.FC = function () {
      }
     />
     <Route
-     path="/d3-candle"
+     path="/upbit"
      element={
       <Suspense fallback={<div>loading</div>}>
-       <CandleStick />
+       <ChartContainer />
       </Suspense>
      }
     />

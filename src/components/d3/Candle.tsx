@@ -3,6 +3,7 @@ import * as d3 from 'd3'
 import * as classNames from 'classnames'
 
 export interface CandleProps {
+ time: Date
  close: number
  open: number
  high: number
