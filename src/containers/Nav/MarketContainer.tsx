@@ -60,7 +60,7 @@ const MarketContainer = function () {
        onChange={(event, item) => {
         onChange(item)
        }}
-       value={!value ? undefined : value[0]}
+       //    value={!value ? undefined : value[0]}
        options={itemList}
        getOptionLabel={(item) => `${item.english_name}=${item.korean_name}=${item.market}`}
        getOptionSelected={(option, value) => {

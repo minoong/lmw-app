@@ -8,6 +8,7 @@ import useSWR from 'swr'
 import { UpbitProps } from '../../@types'
 import Candle from '../../components/upbit/Candle'
 import MarketContainer from '../Nav/MarketContainer'
+import CrossHairs from '../../components/d3/CrossHairs'
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
@@ -15,7 +16,12 @@ const ChartContainer = function () {
  const [candles, setCandles] = useState<UpbitProps[]>([])
  const ref = useRef(null)
 
- const { data, error } = useSWR<UpbitProps[], any>('https://api.upbit.com/v1/candles/minutes/1?market=KRW-DAWN&count=50', fetcher, {
+ const [mouseCoords, setMouseCoords] = useState({
+  x: 0,
+  y: 0,
+ })
+
+ const { data, error } = useSWR<UpbitProps[], any>('https://api.upbit.com/v1/candles/minutes/1?market=KRW-ELF&count=50', fetcher, {
   refreshInterval: 1000,
  })
 
@@ -23,6 +29,22 @@ const ChartContainer = function () {
   if (!data) return
   d3.select(ref.current).call((g) => g.selectAll('rect,line').remove())
   setCandles(() => [..._.reverse(data)])
+
+  const max = d3.max(data, (d) => {
+   return d.high_price
+  })
+  const min = d3.min(data, (d) => {
+   return d.low_price
+  })
+
+  const yScale = d3.scaleLinear().domain([min!, max!]).range([300, 0])
+
+  d3
+   .select(ref.current)
+   .call((g) => g.selectAll('g').remove())
+   .append('g')
+   .call(d3.axisRight(yScale)) // Append it to svg
+   .attr('transform', `translate(470,0)`)
  }, [data])
 
  if (!candles || candles.length < 1) {
@@ -46,10 +68,24 @@ const ChartContainer = function () {
 
  const candleWidth = Math.floor((470 / candles.length) * 0.7)
 
+ const onMouseLeave = () => {
+  setMouseCoords({
+   x: 0,
+   y: 0,
+  })
+ }
+
+ const onMouseMoveInside = (e: React.MouseEvent) => {
+  setMouseCoords({
+   x: e.nativeEvent.x - Math.round(e.currentTarget.getBoundingClientRect().left),
+   y: e.nativeEvent.y - Math.round(e.currentTarget.getBoundingClientRect().top),
+  })
+ }
+
  return (
   <div>
-   <MarketContainer />
-   <svg ref={ref} width={500} height={300} className="bg-gray-900 text-white">
+   {/* <MarketContainer /> */}
+   <svg ref={ref} width={500} height={300} className="bg-gray-900 text-white" onMouseMove={onMouseMoveInside} onMouseLeave={onMouseLeave}>
     <g id="yaxis" />
     {candles.map((bar, i, array) => {
      //  const candleX = (470 / (candles.length + 1)) * (i + 1)
@@ -63,6 +99,7 @@ const ChartContainer = function () {
      // eslint-disable-next-line react/no-array-index-key
      return <Candle key={`candle-${i}`} data={bar} x={candleX} candleWidth={candleWidth} pixelFor={pixelFor} refEl={ref} />
     })}
+    {candles && <CrossHairs x={mouseCoords.x} y={mouseCoords.y} pixelWidth={chartDims.pixelWidth} pixelHeight={chartDims.pixelHeight} refEl={ref} />}
    </svg>
   </div>
  )
