@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { Outlet } from 'react-router-dom'
 import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
@@ -67,6 +68,7 @@ const Count = function () {
      )}
     </table>
    </div>
+   <Outlet />
   </>
  )
 }

@@ -5,6 +5,7 @@ import { ko } from 'date-fns/locale'
 import { exit } from 'process'
 import React, { useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
+import { NumberValue } from 'd3'
 import { UpbitProps } from '../../@types'
 import Candle from '../../components/upbit/Candle'
 import MarketContainer from '../Nav/MarketContainer'
@@ -21,14 +22,17 @@ const ChartContainer = function () {
   y: 0,
  })
 
- const { data, error } = useSWR<UpbitProps[], any>('https://api.upbit.com/v1/candles/minutes/1?market=KRW-ELF&count=50', fetcher, {
+ const { data, error } = useSWR<UpbitProps[], any>('https://api.upbit.com/v1/candles/minutes/1?market=KRW-STEEM&count=30', fetcher, {
   refreshInterval: 1000,
  })
 
  useEffect(() => {
   if (!data) return
+
+  const newData = _.reverse(data)
+
   d3.select(ref.current).call((g) => g.selectAll('rect,line').remove())
-  setCandles(() => [..._.reverse(data)])
+  setCandles(() => [...newData])
 
   const max = d3.max(data, (d) => {
    return d.high_price
@@ -39,12 +43,45 @@ const ChartContainer = function () {
 
   const yScale = d3.scaleLinear().domain([min!, max!]).range([300, 0])
 
+  // const focus = d3.select(ref.current).append('g').style('display', 'none')
+
   d3
    .select(ref.current)
    .call((g) => g.selectAll('g').remove())
    .append('g')
    .call(d3.axisRight(yScale)) // Append it to svg
    .attr('transform', `translate(470,0)`)
+
+  const bisectDate = d3.bisector(function (d: UpbitProps) {
+   return new Date(d.candle_date_time_utc)
+  }).left
+  const xScaleTest = d3
+   .scaleTime()
+   .domain([new Date(newData[0].candle_date_time_utc), new Date(newData[newData.length - 1].candle_date_time_utc)])
+   .range([0, 470])
+
+  d3
+   .select(ref.current)
+   .append('rect')
+   .attr('width', 470)
+   .attr('height', 270)
+   .style('fill', 'none')
+   .style('pointer-events', 'all')
+   .on('mousemove', function (event) {
+    // const x0 = xScale.invert(d3.pointer(event, this)[0])
+    // const i = bisectDate(_.reverse(data), x0, 1)
+    // const d0 = _.reverse(data)[i - 1]
+    // const d1 = _.reverse(data)[i]
+
+    const coords = d3.pointer(event, this)
+    const x0 = xScaleTest.invert(coords[0])
+    const i = bisectDate(_.reverse(data), x0, 1)
+    const d0 = _.reverse(data)[i - 1]
+    const d1 = _.reverse(data)[i]
+    const d = +x0 - +d0.candle_date_time_utc > +d1.candle_date_time_utc - +x0 ? d1 : d0
+
+    console.log(d1)
+   })
  }, [data])
 
  if (!candles || candles.length < 1) {
@@ -95,11 +132,12 @@ const ChartContainer = function () {
       //   .nice()
       .range([0, 470])
      const candleX = xScale(new Date(bar.candle_date_time_utc))
-
      // eslint-disable-next-line react/no-array-index-key
      return <Candle key={`candle-${i}`} data={bar} x={candleX} candleWidth={candleWidth} pixelFor={pixelFor} refEl={ref} />
     })}
-    {candles && <CrossHairs x={mouseCoords.x} y={mouseCoords.y} pixelWidth={chartDims.pixelWidth} pixelHeight={chartDims.pixelHeight} refEl={ref} />}
+    {/* {candles && (
+     <CrossHairs x={mouseCoords.x} y={mouseCoords.y} pixelWidth={chartDims.pixelWidth} pixelHeight={chartDims.pixelHeight} refEl={ref} data={candles} />
+    )} */}
    </svg>
   </div>
  )
