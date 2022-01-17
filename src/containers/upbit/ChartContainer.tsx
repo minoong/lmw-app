@@ -81,6 +81,13 @@ const ChartContainer = function () {
     const d = +x0 - +d0.candle_date_time_utc > +d1.candle_date_time_utc - +x0 ? d1 : d0
 
     console.log(d1)
+
+    d3
+     .select(ref.current)
+     //  .call((g) => g.selectAll('g').remove())
+     .append('g')
+     .call(d3.axisBottom(xScaleTest).ticks(7)) // Append it to svg
+     .attr('transform', `translate(0,270)`)
    })
  }, [data])
 
@@ -135,9 +142,9 @@ const ChartContainer = function () {
      // eslint-disable-next-line react/no-array-index-key
      return <Candle key={`candle-${i}`} data={bar} x={candleX} candleWidth={candleWidth} pixelFor={pixelFor} refEl={ref} />
     })}
-    {/* {candles && (
+    {candles && (
      <CrossHairs x={mouseCoords.x} y={mouseCoords.y} pixelWidth={chartDims.pixelWidth} pixelHeight={chartDims.pixelHeight} refEl={ref} data={candles} />
-    )} */}
+    )}
    </svg>
   </div>
  )
