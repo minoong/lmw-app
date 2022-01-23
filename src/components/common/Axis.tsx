@@ -5,7 +5,7 @@ import { AxisScale } from 'd3'
 
 interface IProps {
  type: 'left' | 'bottom'
- scale: any
+ scale: d3.AxisScale<d3.NumberValue>
  ticks: number
  transform: string
  tickFormat?: (domainValue: d3.AxisDomain, index: number) => string

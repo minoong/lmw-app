@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 
 interface IProps {
  type: 'vertical' | 'horizontal'
- scale: any
+ scale: d3.AxisScale<d3.NumberValue>
  ticks: number
  size: number
  transform?: string
