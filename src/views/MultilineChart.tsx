@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 
 export interface IItem {
@@ -38,6 +38,7 @@ interface IProps {
 }
 
 const MultilineChart: React.FC<IProps> = function ({ data, dimensions }) {
+ const [prevItems, setPrevItems] = useState<string[]>([])
  const svgRef = useRef<SVGSVGElement>(null)
  const { width, height, margin } = dimensions
  const svgWidth = width + margin.left + margin.right
@@ -91,7 +92,7 @@ const MultilineChart: React.FC<IProps> = function ({ data, dimensions }) {
    .x((d) => xScale(d.date))
    .y((d) => yScale(d.value))
 
-  svg
+  const lines = svg
    .selectAll('.line')
    .data(data)
    .enter()
@@ -100,6 +101,22 @@ const MultilineChart: React.FC<IProps> = function ({ data, dimensions }) {
    .attr('stroke', (d) => d.color)
    .attr('stroke-width', 3)
    .attr('d', (d) => line(d.items))
+
+  lines.each((d, i, nodes) => {
+   const element = nodes[i]
+   const length = element.getTotalLength()
+   if (!prevItems.includes(d.name)) {
+    d3
+     .select(element)
+     .attr('stroke-dasharray', `${length},${length}`)
+     .attr('stroke-dashoffset', length)
+     .transition()
+     .duration(750)
+     .ease(d3.easeLinear)
+     .attr('stroke-dashoffset', 0)
+   }
+  })
+  setPrevItems(data.map(({ name }) => name))
  }, [data])
 
  return <svg ref={svgRef} width={svgWidth} height={svgHeight} />
