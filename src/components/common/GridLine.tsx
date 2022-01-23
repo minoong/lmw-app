@@ -1,17 +1,18 @@
-import { AxisScale } from 'd3'
+/* eslint-disable react/require-default-props */
 import React, { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
 
 interface IProps {
  type: 'vertical' | 'horizontal'
- scale: AxisScale<number>
+ scale: any
  ticks: number
  size: number
- transform: string
- disableAnimation: boolean
+ transform?: string
+ disableAnimation?: boolean
+ className?: string
 }
 
-const GridLine: React.FC<IProps> = function ({ type, scale, ticks, size, transform, disableAnimation }) {
+const GridLine: React.FC<IProps> = function ({ type, scale, ticks, size, transform, disableAnimation, className }) {
  const ref = useRef<SVGGElement>(null)
 
  useEffect(() => {
@@ -31,7 +32,8 @@ const GridLine: React.FC<IProps> = function ({ type, scale, ticks, size, transfo
   gridGroup.selectAll('line').attr('stroke', 'rgba(255, 255, 255, 0.1)')
  }, [scale, ticks, size, disableAnimation])
 
- return <g ref={ref} transform={transform} />
+ // eslint-disable-next-line react/jsx-props-no-spreading
+ return <g ref={ref} transform={transform} className={className!} />
 }
 
 export default GridLine
