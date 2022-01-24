@@ -53,7 +53,7 @@ const MultilineChart: React.FC<IProps> = function ({ data, dimensions }) {
   <svg width={svgWidth} height={svgHeight}>
    <g transform={`translate(${margin.left},${margin.top})`}>
     <GridLine type="vertical" scale={xScale} ticks={5} size={height} transform={`translate(0, ${height})`} disableAnimation />
-    <GridLine type="horizontal" scale={yScaleForAxis} ticks={5} size={width} />
+    <GridLine type="horizontal" scale={yScaleForAxis} ticks={2} size={width} />
     <GridLine type="horizontal" className="baseGridLine" scale={yScale} ticks={1} size={width} disableAnimation />
     {data.map(({ name, items = [], color }) => (
      <Line key={name} data={items} xScale={xScale} yScale={yScale} color={color} isSmooth animation="fadeIn" />

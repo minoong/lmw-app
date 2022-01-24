@@ -21,10 +21,16 @@ const useController = ({ data, width, height }: { data: (IPortfolio | ISchc | IV
  }, [height, yMin, yMax])
 
  const yScaleForAxis = useMemo(() => {
-  return d3.scaleLinear([yMin, yMax]).range([height, 0])
+  console.log(1)
+  // return d3.scaleLinear([yMin, yMax]).range([height, 0])
+  return d3
+   .scaleBand()
+   .domain([`${yMin}`, `${yMax}`])
+   .range([height, 0])
  }, [height, yMin, yMax])
 
  const yTickFormat = (d: any) => {
+  console.log(d)
   return `${parseFloat(d) > 0 ? '+' : ''}${d3.format('.2%')(+d / 100)}`
  }
 

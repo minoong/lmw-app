@@ -5,7 +5,7 @@ import { AxisScale } from 'd3'
 
 interface IProps {
  type: 'left' | 'bottom'
- scale: d3.AxisScale<d3.NumberValue>
+ scale: d3.AxisScale<any>
  ticks: number
  transform: string
  tickFormat?: (domainValue: d3.AxisDomain, index: number) => string
@@ -19,7 +19,7 @@ const Axis: React.FC<IProps> = function ({ type, scale, ticks, transform, tickFo
  useEffect(() => {
   const axisGenerator = type === 'left' ? d3.axisLeft : d3.axisBottom
   const axis = axisGenerator(scale).ticks(ticks).tickFormat(tickFormat!)
-  const axisGroup = d3.select(ref.current).append('g')
+  const axisGroup = d3.select(ref.current) as d3.Selection<SVGGElement, unknown, null, undefined>
 
   if (disableAnimation) {
    axisGroup.call(axis)

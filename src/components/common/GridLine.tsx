@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 
 interface IProps {
  type: 'vertical' | 'horizontal'
- scale: d3.AxisScale<d3.NumberValue>
+ scale: d3.AxisScale<any>
  ticks: number
  size: number
  transform?: string
@@ -19,7 +19,7 @@ const GridLine: React.FC<IProps> = function ({ type, scale, ticks, size, transfo
   const axisGenerator = type === 'vertical' ? d3.axisBottom : d3.axisLeft
   const axis = axisGenerator(scale).ticks(ticks).tickSize(-size)
 
-  const gridGroup = d3.select(ref.current).append('g')
+  const gridGroup = d3.select(ref.current) as d3.Selection<SVGGElement, unknown, null, undefined>
 
   if (disableAnimation) {
    gridGroup.call(axis)
