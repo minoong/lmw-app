@@ -3,9 +3,7 @@ import { DateTime, Interval } from 'luxon'
 
 export const formatPriceKRW = (price: number) => new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(price)
 
-export const formatPercent = (percent = 0) => {
- return `${parseFloat(`${percent}`) > 0 ? '+' : ''}${d3.format('.2%')(percent / 100)}`
-}
+export const formatPercent = (percent = 0) => `${parseFloat(`${percent}`) > 0 ? '+' : ''}${d3.format('.2%')(percent / 100)}`
 
 export const getPeriod = (date: Date) => {
  if (!date) return 6

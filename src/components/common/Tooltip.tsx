@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import * as d3 from 'd3'
+import * as classNames from 'classnames'
 import { IItem, IPortfolio, ISchc, IVcit } from '../../views/MultilineChart'
-import { formatPriceKRW } from '../../utils/charts/common.charts'
+import { formatPercent, formatPriceKRW } from '../../utils/charts/common.charts'
 
 interface IProps {
  xScale: d3.ScaleTime<number, number, never>
@@ -19,7 +20,20 @@ const Tooltip: React.FC<IProps> = function ({ xScale, yScale, width, height, dat
  const ref = useRef<SVGGElement>(null)
  const drawLine = useCallback(
   (x: number) => {
-   d3.select(ref.current).select('.tooltipLine').attr('x1', x).attr('x2', x).attr('y1', -margin.top).attr('y2', height)
+   d3
+    .select(ref.current)
+    .select('.tooltipLine')
+    .attr('x1', x)
+    .attr('x2', x)
+    .attr('y1', -margin.top)
+    .attr('y2', height)
+    .attr('stroke', '#ff007a')
+    .attr('stroke-width', '1')
+   // .attr('class', () => {
+   //  return classNames.default({
+   //   'stroke-1': true,
+   //  })
+   // })
   },
   [ref, height, margin],
  )
@@ -51,6 +65,10 @@ const Tooltip: React.FC<IProps> = function ({ xScale, yScale, width, height, dat
   d3
    .selectAll('.performanceItemValue')
    .filter((td, tIndex) => tIndex === i)
+   .text(isVisible ? formatPercent(d.value) : '')
+  d3
+   .selectAll('.performanceItemMarketValue')
+   .filter((td, tIndex) => tIndex === i)
    .text(d.marketvalue && !isVisible ? 'No data' : formatPriceKRW(d.marketvalue))
 
   const maxNameWidth = d3.max(d3.selectAll('.performanceItemName').nodes() as HTMLElement[], (node: HTMLElement) => node.getBoundingClientRect().width)
@@ -67,7 +85,6 @@ const Tooltip: React.FC<IProps> = function ({ xScale, yScale, width, height, dat
  const followPoints = useCallback(
   (event) => {
    const [x] = d3.pointer(event, anchorEl)
-   console.log(d3.pointer(event, anchorEl))
    const xDate = xScale.invert(x)
    const bisectDate = d3.bisector((d: IItem) => d.date).left
    let baseXPos = 0
