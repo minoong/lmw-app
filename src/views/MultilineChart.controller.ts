@@ -34,11 +34,19 @@ const useController = ({ data, width, height }: { data: (IPortfolio | ISchc | IV
   return `${parseFloat(d) > 0 ? '+' : ''}${d3.format('.2%')(+d / 100)}`
  }
 
+ const xTickFormat = (d: any) => {
+  if (d3.timeFormat('%b')(d) === 'Jan') {
+   return d3.timeFormat('%Y')(d)
+  }
+  return d3.timeFormat('%b')(d)
+ }
+
  return {
   yTickFormat,
   xScale,
   yScale,
   yScaleForAxis,
+  xTickFormat,
  }
 }
 

@@ -5,6 +5,8 @@ import GridLine from '../components/common/GridLine'
 import Line from '../components/common/Line'
 import Axis from '../components/common/Axis'
 import Area from '../components/common/Area'
+import Overlay from '../components/common/Overlay'
+import Tooltip from '../components/common/Tooltip'
 
 export interface IItem {
  date: Date
@@ -43,11 +45,12 @@ interface IProps {
 }
 
 const MultilineChart: React.FC<IProps> = function ({ data, dimensions }) {
+ const overlayRef = useRef<SVGRectElement>(null)
  const { width, height, margin } = dimensions
  const svgWidth = width + margin.left + margin.right
  const svgHeight = height + margin.top + margin.bottom
  const controller = useController({ data, width, height })
- const { yTickFormat, xScale, yScale, yScaleForAxis } = controller
+ const { yTickFormat, xScale, yScale, yScaleForAxis, xTickFormat } = controller
 
  return (
   <svg width={svgWidth} height={svgHeight}>
@@ -60,7 +63,19 @@ const MultilineChart: React.FC<IProps> = function ({ data, dimensions }) {
     ))}
     <Area data={data[0].items} color={data[0].color} xScale={xScale} yScale={yScale} disableAnimation />
     <Axis type="left" scale={yScaleForAxis} transform="translate(50, -10)" ticks={5} tickFormat={yTickFormat} className="zzzz" />
-    <Axis type="bottom" className="axisX" scale={xScale} transform={`translate(10, ${height - height / 6})`} ticks={5} />
+    {/* <Axis type="bottom" className="axisX" scale={xScale} transform={`translate(10, ${height - height / 6})`} ticks={5} /> */}
+    <Overlay ref={overlayRef} width={width} height={height}>
+     <Axis
+      type="bottom"
+      className="axisX"
+      anchorEl={overlayRef!.current!}
+      scale={xScale}
+      transform={`translate(10, ${height - height / 6})`}
+      ticks={5}
+      tickFormat={xTickFormat}
+     />
+     <Tooltip anchorEl={overlayRef.current} width={width} height={height} margin={margin} xScale={xScale} yScale={yScale} data={data} />
+    </Overlay>
    </g>
   </svg>
  )
