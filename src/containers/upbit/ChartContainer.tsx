@@ -22,7 +22,7 @@ const ChartContainer = function () {
   y: 0,
  })
 
- const { data, error } = useSWR<UpbitProps[], any>('https://api.upbit.com/v1/candles/minutes/1?market=KRW-STEEM&count=30', fetcher, {
+ const { data, error } = useSWR<UpbitProps[], any>('https://api.upbit.com/v1/candles/minutes/1?market=KRW-BTC&count=30', fetcher, {
   refreshInterval: 1000,
  })
 
@@ -49,7 +49,7 @@ const ChartContainer = function () {
    .select(ref.current)
    .call((g) => g.selectAll('g').remove())
    .append('g')
-   .call(d3.axisRight(yScale)) // Append it to svg
+   .call(d3.axisRight(yScale).ticks(5)) // Append it to svg
    .attr('transform', `translate(470,0)`)
 
   const bisectDate = d3.bisector(function (d: UpbitProps) {

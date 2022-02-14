@@ -11,6 +11,7 @@ const Tutorial = React.lazy(() => import('./components/d3/Tutorial'))
 const CandleStick = React.lazy(() => import('./components/d3/CandleStick'))
 const ChartContainer = React.lazy(() => import('./containers/upbit/ChartContainer'))
 const View = React.lazy(() => import('./views/view'))
+const Market = React.lazy(() => import('./pages/Market'))
 
 const App: React.FC = function () {
  return (
@@ -48,6 +49,14 @@ const App: React.FC = function () {
      element={
       <Suspense fallback={<div>loading</div>}>
        <View />
+      </Suspense>
+     }
+    />
+    <Route
+     path="/market/:market"
+     element={
+      <Suspense fallback={<div>loading</div>}>
+       <Market />
       </Suspense>
      }
     />

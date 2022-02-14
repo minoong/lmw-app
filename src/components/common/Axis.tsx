@@ -40,8 +40,8 @@ const Axis: React.FC<IProps> = function ({ type, scale, ticks, transform, tickFo
     .on('mouseout.axisX', () => {
      d3.select(ref.current).selectAll('text').attr('opacity', 0.5).style('font-weight', 'normal')
     })
-    .on('mousemove.axisX', () => {
-     const [x] = d3.pointer(anchorEl)
+    .on('mousemove.axisX', (event) => {
+     const [x] = d3.pointer(event, anchorEl)
      const xDate = (scale as d3.ScaleTime<number, number, never>).invert(x)
      const textElements = d3.select(ref.current).selectAll('text')
      const data = textElements.data()

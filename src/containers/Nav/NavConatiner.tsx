@@ -6,7 +6,7 @@ const NavConatiner = function () {
   <div>
    <nav>
     <Link to="/">Home</Link> | <Link to="about">About</Link> | <Link to="count">Count</Link> | <Link to="d3">D3</Link> | <Link to="upbit">upbit</Link> |{' '}
-    <Link to="learn">Learn d3</Link>
+    <Link to="learn">Learn d3</Link> | <Link to="market/KRW-BTC">KRW-BTC</Link>
    </nav>
   </div>
  )
