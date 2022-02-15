@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { UseDimensionsParamsProps, UseDimensionsProps } from '../@types'
 import useResize from './useResize'
 
-const useDimensions = ({ maxHeight, scaleCoef, margin }: UseDimensionsParamsProps) => {
+const useDimensions = ({ maxHeight, scaleCoef, margin }: UseDimensionsParamsProps): [React.MutableRefObject<null>, UseDimensionsProps] => {
  const ref = useRef(null)
  const { width } = useResize(ref)
 

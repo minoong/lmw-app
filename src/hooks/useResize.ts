@@ -6,11 +6,9 @@ const useResize = (ref: React.MutableRefObject<null>) => {
  const [dimensions, setDimensions] = useState<UseResizeProps>()
 
  useEffect(() => {
-  console.log(ref.current)
   const element = ref.current!
   const resizeObserver = new ResizeObserver((entries) => {
    entries.forEach((entry) => {
-    console.log(entry.contentRect)
     setDimensions(entry.contentRect as unknown as UseResizeProps)
    })
   })
